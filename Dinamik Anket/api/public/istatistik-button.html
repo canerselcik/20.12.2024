@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kullanıcı İstatistikleri</title>
+    <link rel="stylesheet" href="istatistik-button.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Kullanıcı İstatistikleri</h2>
+      <div id="istatistikler">
+        <!-- İstatistik verileri burada gösterilecek -->
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const response = await fetch(
+            "http://localhost:5000/api/users/feedback/stats"
+          );
+          if (!response.ok) {
+            throw new Error("İstatistik verileri alınamadı.");
+          }
+          const data = await response.json();
+          const istatistikDiv = document.getElementById("istatistikler");
+
+          // İstatistikleri listeleme
+          data.data.forEach((istatistik) => {
+            // Toplam cevap sayısını hesapla
+            const toplamCevap = istatistik.feedback.reduce(
+              (sum, f) => sum + f.count,
+              0
+            );
+
+            const statDiv = document.createElement("div");
+            statDiv.innerHTML = `<h3>${istatistik.soru}</h3>`;
+
+            istatistik.feedback.forEach((f) => {
+              const yuzde = ((f.count / toplamCevap) * 100).toFixed(2); // Yüzdelik hesaplama
+
+              // Çubuk grafik için yapı
+              const barContainer = document.createElement("div");
+              barContainer.classList.add("bar-container");
+
+              barContainer.innerHTML = `
+                <div class="bar-label">${f.feedback}</div>
+                <div class="bar" style="width: ${yuzde}%; max-width: 100%">${yuzde}%</div>
+              `;
+              statDiv.appendChild(barContainer);
+            });
+
+            statDiv.innerHTML += `<hr>`;
+            istatistikDiv.appendChild(statDiv);
+          });
+        } catch (error) {
+          alert("Bir hata oluştu: " + error.message);
+          console.error(error);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,279 @@
+/* Genel Sayfa Ayarları */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #e9f7fd; /* Soluk bebe mavisi arka plan */
+  background-image: url('pexels-pixabay-531756.jpg'); /* Arka plan resmi */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Ana İçerik */
+.container {
+  max-width: 600px;
+  width: 90%;
+  padding: 20px;
+  background-color: #ffffff; /* Beyaz arka plan */
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative; /* Container içinde butonun sabit kalabilmesi için */
+}
+
+/* Şifre Değişikliği Butonu (Sağ Üst Köşeye Sabitleme) */
+/* Şifre Değişikliği Butonu */
+.change-password-btn {
+  padding: 12px;
+  background-color: #3498db; /* Bebe mavisi buton */
+  color: white;
+  border: none;
+  border-radius: 50%; /* Yuvarlak buton */
+  font-size: 1.5rem; /* Simge boyutunu artırarak daha belirgin hale getir */
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute; /* Butonu container içinde sabitler */
+  top: 20px; /* Üstten 20px mesafe */
+  right: 20px; /* Sağdan 20px mesafe */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 40px; /* Buton genişliğini ve yüksekliğini belirler */
+  height: 40px;
+}
+
+.change-password-btn i {
+  margin: 0; /* Simgenin etrafında mesafe olmaması için */
+}
+
+.change-password-btn:hover {
+  background-color: #2980b9; /* Hoverda daha koyu mavi */
+  transform: translateY(-3px);
+}
+
+.print-button {
+  padding: 12px;
+  background-color: #3498db; /* Bebe mavisi buton */
+  color: white;
+  border: none;
+  border-radius: 50%; /* Yuvarlak buton */
+  font-size: 1.5rem; /* Simge boyutunu artırarak daha belirgin hale getir */
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute; /* Butonu container içinde sabitler */
+  top: 20px; /* Üstten 20px mesafe */
+  right: 20px; /* Sağdan 20px mesafe */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 40px; /* Buton genişliği ve yüksekliği */
+  height: 40px;
+}
+
+.print-button i {
+  margin: 0; /* Simgenin etrafında boşluk olmaması */
+}
+
+.print-button:hover {
+  background-color: #2980b9; /* Hoverda daha koyu mavi */
+  transform: translateY(-3px); /* Hoverda yukarıya doğru hafif hareket */
+}
+
+.users-button {
+  padding: 12px;
+  background-color: #3498db; /* Bebe mavisi buton */
+  color: white;
+  border: none;
+  border-radius: 50%; /* Yuvarlak buton */
+  font-size: 1.5rem; /* Simge boyutunu artırarak daha belirgin hale getir */
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute; /* Butonu container içinde sabitler */
+  top: 20px; /* Üstten 20px mesafe */
+  right: 65px; /* Sağdan 20px mesafe */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 40px; /* Buton genişliği ve yüksekliği */
+  height: 40px;
+}
+
+.users-button i {
+  margin: 0; /* Simgenin etrafında boşluk olmaması */
+}
+
+.users-button:hover {
+  background-color: #2980b9; /* Hoverda daha koyu mavi */
+  transform: translateY(-3px); /* Hoverda yukarıya doğru hafif hareket */
+}
+
+
+.container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+  /* Hoverda butonu etkilemeyecek şekilde herhangi bir değişiklik yapılmadı */
+}
+
+/* Başlıklar */
+h2 {
+  text-align: center;
+  color: #3498db; /* Bebe mavisi renginde başlık */
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+/* Kullanıcı Bilgileri */
+.user-info {
+  margin-bottom: 20px;
+}
+
+.user-info label {
+  font-weight: 600;
+  color: #2980b9; /* Koyu mavi */
+  display: block;
+  margin-bottom: 5px;
+}
+
+.info-value {
+  display: block;
+  padding: 12px;
+  background-color: #d6eaf8; /* Soluk mavi arka plan */
+  border: 1px solid #aed6f1; /* Açık mavi sınır */
+  border-radius: 8px;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+}
+
+/* Formlar */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input, textarea {
+  padding: 12px;
+  border: 1px solid #aed6f1; /* Açık mavi sınır */
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: #3498db; /* Bebe mavisi sınır */
+  outline: none;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+/* Butonlar */
+button {
+  padding: 12px;
+  background-color: #3498db; /* Bebe mavisi buton */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #2980b9; /* Hoverda daha koyu mavi */
+  transform: translateY(-3px);
+}
+
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+  float: right;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: red;
+}
+
+/* Linkler */
+a {
+  color: #3498db; /* Bebe mavisi link */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #2980b9; /* Hoverda daha koyu mavi */
+  text-decoration: underline;
+}
+
+/* Responsive Tasarım */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  input, button {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  button {
+    padding: 10px;
+  }
+
+  input, textarea {
+    padding: 8px;
+  }
+}

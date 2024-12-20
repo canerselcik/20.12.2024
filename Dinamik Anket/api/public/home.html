@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anket</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Anket Soruları</h2>
+      <form id="anketFormu">
+        <div class="user-info">
+          <label for="isim">İsim:</label>
+          <span id="isim" class="info-value"></span>
+
+          <label for="soyisim">Soyisim:</label>
+          <span id="soyisim" class="info-value"></span>
+
+          <label for="okulNo">Okul Numarası:</label>
+          <span id="okulNo" class="info-value"></span>
+        </div>
+        <div id="soruAlani"></div>
+        <button type="button" id="sonrakiButon">Sonraki</button>
+        <button type="submit" id="gonderButon" style="display: none">
+          Cevapları Gönder
+        </button>
+      </form>
+      <!-- Şifre Değişikliği Butonu -->
+      <button
+        id="changePasswordButton"
+        onclick="window.location.href='change_password.html'"
+        class="change-password-btn"
+      >
+        <i class="fas fa-key"></i>
+      </button>
+      <div id="sonuc"></div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        if (!sessionStorage.getItem("userLoggedIn")) {
+          alert("Bu sayfaya erişim için giriş yapmalısınız.");
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Anket tamamlandıysa tekrar yüklenmesini engelle
+        if (sessionStorage.getItem("anketTamamlandi") === "true") {
+          alert("Anketi daha önce tamamladınız.");
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Kullanıcı bilgilerini sessionStorage'dan al ve span alanlarına doldur
+        document.getElementById("isim").innerText =
+          sessionStorage.getItem("isim");
+        document.getElementById("soyisim").innerText =
+          sessionStorage.getItem("soyisim");
+        document.getElementById("okulNo").innerText =
+          sessionStorage.getItem("okul_no");
+
+        await fetchAnkets();
+      });
+
+      let currentQuestionIndex = 0;
+      let questions = [];
+
+      async function fetchAnkets() {
+        try {
+          const response = await fetch("http://localhost:5000/api/anket");
+          if (!response.ok) throw new Error("Anket soruları alınamadı.");
+          const data = await response.json();
+          questions = data.data;
+          displayQuestion();
+        } catch (error) {
+          alert("Bir hata oluştu: " + error.message);
+          console.error(error);
+        }
+      }
+
+      function displayQuestion() {
+        const soruAlani = document.getElementById("soruAlani");
+        soruAlani.innerHTML = "";
+
+        const soruObjesi = questions[currentQuestionIndex];
+        const soruDiv = document.createElement("div");
+        soruDiv.innerHTML = `
+              <strong>${soruObjesi.soru}</strong><br>
+              ${soruObjesi.cevap
+                .map(
+                  (cevap) => `
+                    <label>
+                      <input type="radio" name="soru" value="${cevap}" required> ${cevap}
+                    </label>
+                  `
+                )
+                .join("<br>")}
+            `;
+        soruAlani.appendChild(soruDiv);
+
+        document.getElementById("sonrakiButon").style.display =
+          currentQuestionIndex < questions.length - 1 ? "inline" : "none";
+        document.getElementById("gonderButon").style.display =
+          currentQuestionIndex === questions.length - 1 ? "inline" : "none";
+      }
+
+      document
+        .getElementById("sonrakiButon")
+        .addEventListener("click", async () => {
+          const selectedAnswer = document.querySelector(
+            'input[name="soru"]:checked'
+          );
+          if (!selectedAnswer) {
+            alert("Lütfen bir cevap seçiniz.");
+            return;
+          }
+
+          const cevapData = {
+            okul_no: document.getElementById("okulNo").innerText,
+            soru: questions[currentQuestionIndex].soru,
+            feedback: selectedAnswer.value,
+          };
+
+          try {
+            const response = await fetch(
+              "http://localhost:5000/api/users/feedback",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify([cevapData]),
+              }
+            );
+
+            if (!response.ok) throw new Error("Cevap gönderilemedi.");
+            currentQuestionIndex++;
+            displayQuestion();
+          } catch (error) {
+            alert("Bir hata oluştu: " + error.message);
+            console.error(error);
+          }
+        });
+
+      document
+        .getElementById("anketFormu")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const selectedAnswer = document.querySelector(
+            'input[name="soru"]:checked'
+          );
+          if (!selectedAnswer) {
+            alert("Lütfen son soruya cevap veriniz.");
+            return;
+          }
+
+          const cevapData = {
+            okul_no: document.getElementById("okulNo").innerText,
+            soru: questions[currentQuestionIndex].soru,
+            feedback: selectedAnswer.value,
+          };
+
+          try {
+            const response = await fetch(
+              "http://localhost:5000/api/users/feedback",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify([cevapData]),
+              }
+            );
+
+            if (!response.ok) throw new Error("Son soru gönderilemedi.");
+
+            document.getElementById("sonuc").innerText =
+              "Cevaplar başarıyla gönderildi!";
+
+            // Anket tamamlandı bayrağı ayarla ve login sayfasına yönlendir
+            sessionStorage.setItem("anketTamamlandi", "true");
+            setTimeout(() => {
+              window.location.href = "login.html";
+            }, 2000);
+          } catch (error) {
+            alert("Bir hata oluştu: " + error.message);
+            console.error(error);
+          }
+        });
+    </script>
+  </body>
+</html>

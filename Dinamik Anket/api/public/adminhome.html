@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anket Yönetimi</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Anket Yönetimi</h2>
+
+      <!-- Anket ekleme formu -->
+      <form id="anketEkleFormu" aria-label="Yeni Anket Ekleme">
+        <h3>Yeni Anket Ekle</h3>
+        <label for="soru">Soru:</label>
+        <input type="text" id="soru" placeholder="Soru girin" required />
+
+        <label for="cevaplar">Cevaplar:</label>
+        <input
+          type="text"
+          id="cevaplar"
+          placeholder="Cevapları virgülle ayırarak girin"
+          required
+        />
+
+        <button type="submit">Anketi Ekle</button>
+      </form>
+
+      <!-- Anket güncelleme ve silme formu -->
+      <form
+        id="anketGuncelleSilFormu"
+        aria-label="Mevcut Anketleri Güncelle veya Sil"
+      >
+        <h3>Mevcut Anketleri Güncelle veya Sil</h3>
+        <label for="anketId">Anket ID'si:</label>
+        <input
+          type="text"
+          id="anketId"
+          placeholder="Anket ID'sini girin"
+          required
+        />
+
+        <label for="guncelleSoru">Yeni Soru:</label>
+        <input type="text" id="guncelleSoru" placeholder="Yeni Soru" />
+
+        <label for="guncelleCevaplar">Yeni Cevaplar:</label>
+        <input
+          type="text"
+          id="guncelleCevaplar"
+          placeholder="Yeni Cevapları virgülle ayırarak girin"
+        />
+
+        <div class="button-group">
+          <button type="submit" id="guncelleButon">Güncelle</button>
+          <button type="button" id="silButon">Sil</button>
+          <button type="button" id="istatistikButon">İstatistik</button>
+        </div>
+        <!-- yazdırma-->
+        <button
+          class="print-button"
+          id="exportExcelBtn"
+          aria-label="Excel'e Aktar"
+        >
+          <i class="fas fa-file-excel"></i>
+        </button>
+
+        <button
+          class="users-button"
+          id="usersBtn"
+          aria-label="Kullanıcıları Göster"
+        >
+          <i class="fas fa-user"></i>
+        </button>
+      </form>
+
+      <!-- Kaydedilen soruların gösterileceği alan -->
+      <div id="kaydedilenSorular">
+        <h3>Kaydedilen Sorular ve Cevaplar:</h3>
+        <div id="sorular"></div>
+      </div>
+    </div>
+
+    <!-- Modal Pencere -->
+    <div id="istatistikModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h3>Anket İstatistikleri</h3>
+        <p>İstatistik verilerini burada görüntüleyebilirsiniz.</p>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Kullanıcı girişini kontrol et
+        if (!sessionStorage.getItem("adminLoggedIn")) {
+          alert("Bu sayfaya erişim için giriş yapmalısınız.");
+          window.location.href = "adminLogin.html"; // Giriş sayfasına yönlendir
+          return;
+        }
+
+        // Anketleri yükle
+        await fetchAnkets();
+      });
+
+      async function fetchAnkets() {
+        try {
+          const response = await fetch("http://localhost:5000/api/anket");
+          if (!response.ok) {
+            throw new Error("Anket soruları alınamadı.");
+          }
+          const data = await response.json();
+          const sorularDiv = document.getElementById("sorular");
+
+          // Soruları ve cevapları listeleme
+          if (Array.isArray(data.data)) {
+            sorularDiv.innerHTML = ""; // Mevcut soruları temizle
+            data.data.forEach((soruObjesi) => {
+              const soruDiv = document.createElement("div");
+              soruDiv.innerHTML = `
+              <strong>ID: ${soruObjesi._id}</strong><br>
+              <strong>Soru:</strong> ${soruObjesi.soru}<br>
+              <strong>Cevaplar:</strong> ${soruObjesi.cevap.join(", ")}
+              <hr>
+          `;
+              sorularDiv.appendChild(soruDiv);
+            });
+          } else {
+            console.error("Beklenen veri formatı alınamadı:", data);
+          }
+        } catch (error) {
+          alert("Bir hata oluştu: " + error.message);
+          console.error(error);
+        }
+      }
+
+      // Anket ekleme işlemi
+      document
+        .getElementById("anketEkleFormu")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const soru = document.getElementById("soru").value;
+          const cevaplar = document.getElementById("cevaplar").value.split(",");
+
+          try {
+            const response = await fetch(
+              "http://localhost:5000/api/anket/add",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ soru, cevap: cevaplar }),
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Anket eklenemedi.");
+            }
+            alert("Anket başarıyla eklendi!");
+            document.getElementById("anketEkleFormu").reset();
+            await fetchAnkets(); // Soruları güncelle
+          } catch (error) {
+            alert("Bir hata oluştu: " + error.message);
+            console.error(error);
+          }
+        });
+
+      // Anket güncelleme ve silme işlemi
+      document
+        .getElementById("anketGuncelleSilFormu")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const anketId = document.getElementById("anketId").value;
+          const guncelleSoru = document.getElementById("guncelleSoru").value;
+          const guncelleCevaplar = document
+            .getElementById("guncelleCevaplar")
+            .value.split(",");
+
+          if (guncelleSoru || guncelleCevaplar.length) {
+            try {
+              const response = await fetch(
+                "http://localhost:5000/api/anket/update",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    _id: anketId,
+                    soru: guncelleSoru,
+                    cevap: guncelleCevaplar,
+                  }),
+                }
+              );
+
+              if (!response.ok) {
+                throw new Error("Anket güncellenemedi.");
+              }
+
+              alert("Anket başarıyla güncellendi!");
+              await fetchAnkets(); // Soruları güncelle
+            } catch (error) {
+              alert("Bir hata oluştu: " + error.message);
+              console.error(error);
+            }
+          }
+        });
+
+      // Anket silme işlemi
+      document
+        .getElementById("silButon")
+        .addEventListener("click", async () => {
+          const anketId = document.getElementById("anketId").value;
+
+          try {
+            const response = await fetch(
+              "http://localhost:5000/api/anket/delete",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ _id: anketId }),
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Anket silinemedi.");
+            }
+
+            alert("Anket başarıyla silindi!");
+            await fetchAnkets(); // Soruları güncelle
+          } catch (error) {
+            alert("Bir hata oluştu: " + error.message);
+            console.error(error);
+          }
+        });
+
+      // İstatistik butonuna tıklanınca
+      document
+        .getElementById("istatistikButon")
+        .addEventListener("click", () => {
+          window.location.href = "istatistik-button.html";
+        });
+
+      document
+        .getElementById("exportExcelBtn")
+        .addEventListener("click", async () => {
+          try {
+            // Excel dosyası indirme isteği
+            const response = await fetch(
+              "http://localhost:5000/api/users/export",
+              {
+                method: "POST",
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Dosya indirilemedi.");
+            }
+
+            // Blob olarak Excel dosyasını al ve indirmeyi başlat
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = "feedback_export.xlsx"; // Dosya adı
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+          } catch (error) {
+            alert("Bir hata oluştu: " + error.message);
+            console.error(error);
+          }
+        });
+
+      // Kullanıcıları göster butonuna tıklanıldığında
+      document.getElementById("usersBtn").addEventListener("click", () => {
+        // users-button.html sayfasına yönlendir
+        window.location.href = "users-button.html";
+      });
+    </script>
+  </body>
+</html>

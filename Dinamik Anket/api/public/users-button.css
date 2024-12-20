@@ -1,0 +1,118 @@
+/* Genel Sayfa Ayarları */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f6f9; /* Hafif gri arka plan */
+  background-image: url('pexels-pixabay-531756.jpg'); /* Arka plan resmi ekleniyor */
+  background-size: cover; /* Arka planın ekranı kaplaması sağlanır */
+  background-position: center center; /* Arka planın ortalanması sağlanır */
+  background-repeat: no-repeat; /* Resmin tekrar etmemesi sağlanır */
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Kapsayıcı */
+.container {
+  max-width: 1000px;
+  width: 90%;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Başlık */
+h2 {
+  text-align: center;
+  color: #3498db;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Tablo Stili */
+.table-responsive {
+  overflow-x: auto; /* Yatay kaydırmayı etkinleştir */
+  -webkit-overflow-scrolling: touch; /* Mobil cihazlarda daha iyi kaydırma */
+  width: 100%; /* Tabloyu kapsayıcıya tam sığdırma */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+td {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+tr:nth-child(even) td {
+  background-color: #f2f2f2; /* Çift satırlar için daha açık renk */
+}
+
+tr:hover {
+  background-color: #eaf2f8; /* Hover efektiyle satır rengi değişir */
+}
+
+/* Responsive Tasarım (Mobil için düzenleme) */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+    width: 95%;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+    width: 98%;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  table {
+    font-size: 0.8rem;
+  }
+
+  th, td {
+    padding: 6px;
+  }
+}

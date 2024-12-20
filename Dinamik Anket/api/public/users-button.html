@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kullanıcı Listesi</title>
+    <link rel="stylesheet" href="users-button.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Kullanıcı Listesi</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Okul No</th>
+            <th>E-posta</th>
+          </tr>
+        </thead>
+        <tbody id="userList">
+          <!-- Dinamik olarak kullanıcılar buraya eklenecek -->
+        </tbody>
+      </table>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          // Kullanıcı bilgilerini çek
+          const response = await fetch("http://localhost:5000/api/users/get");
+          if (!response.ok) {
+            throw new Error("Kullanıcı listesi alınamadı.");
+          }
+          const result = await response.json();
+
+          // Gelen veriden başarı durumu ve kullanıcı listesini ayıkla
+          if (!result.success) {
+            throw new Error("Kullanıcı bilgileri alınamadı.");
+          }
+          const users = result.data;
+
+          const userList = document.getElementById("userList");
+
+          // Kullanıcıları tabloya ekle
+          users.forEach((user) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${user.isim}</td>
+              <td>${user.soyisim}</td>
+              <td>${user.okul_no}</td>
+              <td>${user.email}</td>
+            `;
+            userList.appendChild(row);
+          });
+        } catch (error) {
+          alert("Bir hata oluştu: " + error.message);
+          console.error(error);
+        }
+      });
+    </script>
+  </body>
+</html>

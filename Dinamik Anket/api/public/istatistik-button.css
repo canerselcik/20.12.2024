@@ -1,0 +1,119 @@
+/* Genel Sayfa Ayarları */
+* {  
+    margin: 0;  
+    padding: 0;  
+    box-sizing: border-box;  
+}
+/* Tüm elemanların kenar boşlukları (margin) ve iç boşlukları (padding) sıfırlanır, kutu modeli için box-sizing kullanılır. */
+
+body {  
+    font-family: 'Roboto', sans-serif;  
+    background-color: #f4f6f9; /* Hafif gri arka plan */
+    background-image: url('pexels-pixabay-531756.jpg'); /* Arka plan resmi */
+    background-size: cover; /* Resmin ekranı kaplaması sağlanır */
+    background-position: center center; /* Arka plan resmi ortalanır */
+    background-repeat: no-repeat; /* Resim tekrarlamaz */
+    color: #333; /* Sayfanın temel yazı rengi */
+    display: flex; /* Sayfa içeriği esnek kutu (flexbox) ile hizalanır */
+    justify-content: center; /* İçerik yatayda ortalanır */
+    align-items: center; /* İçerik dikeyde ortalanır */
+    min-height: 100vh; /* Sayfa en az tam ekran yüksekliğinde olur */
+}
+
+.container {  
+    max-width: 1000px; /* Maksimum genişlik 1000 piksel olur */
+    width: 90%; /* Küçük ekranlar için genişlik %90 */
+    padding: 20px; /* İç boşluk */
+    background-color: #ffffff; /* Arka plan rengi beyaz */
+    border-radius: 10px; /* Köşeler yuvarlatılır */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Hafif kutu gölgesi */
+    margin: 20px; /* Dış boşluk */
+}
+
+h2 {  
+    text-align: center; /* Başlık ortalanır */
+    color: #3498db; /* Mavi renk */
+    margin-bottom: 20px; /* Alt boşluk */
+    font-size: 2rem; /* Yazı boyutu */
+    font-weight: 700; /* Kalın font */
+    letter-spacing: 1px; /* Harfler arası mesafe */
+}
+
+h3 {  
+    margin-top: 20px; /* Üst boşluk */
+    font-size: 1.2rem; /* Yazı boyutu */
+    color: #444; /* Koyu gri renk */
+    font-weight: 600; /* Kalın font */
+}
+
+/* Çubuk Grafik Stili */
+.bar-container {  
+    display: flex; /* Flex düzeni */
+    align-items: center; /* Dikey hizalama */
+    margin: 10px 0; /* Alt ve üst boşluk */
+}
+
+.bar-label {  
+    width: 150px; /* Etiket genişliği */
+    font-weight: bold; /* Kalın yazı */
+    color: #555; /* Gri renk */
+}
+
+.bar {  
+    height: 20px; /* Yükseklik */
+    background: linear-gradient(to right, #3498db, #2980b9); /* Renk geçişli arka plan */
+    color: #fff; /* Yazı rengi beyaz */
+    text-align: right; /* Yazı sağa yaslanır */
+    padding-right: 8px; /* Sağ iç boşluk */
+    border-radius: 5px; /* Köşeler yuvarlatılır */
+    transition: width 0.5s ease; /* Genişlik geçişi için animasyon */
+    font-size: 0.9rem; /* Yazı boyutu */
+}
+
+.bar-container:hover .bar {  
+    opacity: 0.9; /* Hover (üzerine gelindiğinde) opaklık azaltılır */
+}
+
+/* Ayraç Stili */
+hr {  
+    border: none; /* Çizginin kenarlığı kaldırılır */
+    border-top: 1px solid #2980b9; /* Üst kenarlık mavi çizgi */
+    margin: 15px 0; /* Alt ve üst boşluk */
+}
+
+/* Responsive Tasarım */
+@media (max-width: 768px) {  
+    h2 {  
+        font-size: 1.7rem; /* Başlık boyutu küçültülür */
+    }
+
+    .bar-label {  
+        font-size: 0.9rem; /* Etiket yazı boyutu küçültülür */
+        width: 120px; /* Etiket genişliği azalır */
+    }
+
+    .bar {  
+        font-size: 0.8rem; /* Çubuk içindeki yazı boyutu */
+        height: 18px; /* Yükseklik azalır */
+    }
+}
+
+@media (max-width: 480px) {  
+    h2 {  
+        font-size: 1.5rem; /* Başlık daha da küçültülür */
+    }
+
+    h3 {  
+        font-size: 1rem; /* Alt başlık küçültülür */
+    }
+
+    .bar-label {  
+        font-size: 0.8rem; /* Etiket yazı boyutu küçültülür */
+        width: 100px; /* Etiket genişliği azaltılır */
+    }
+
+    .bar {  
+        font-size: 0.7rem; /* Çubuk yazı boyutu küçültülür */
+        height: 16px; /* Yükseklik küçültülür */
+    }
+}

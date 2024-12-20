@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Giriş</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Admin Giriş</h2>
+      <form id="adminLoginForm">
+        <label for="email">Admin Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="sifre">Şifre:</label>
+        <input type="password" id="sifre" name="sifre" required />
+
+        <button type="submit">Giriş Yap</button>
+      </form>
+    </div>
+
+    <script>
+      document
+        .getElementById("adminLoginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const sifre = document.getElementById("sifre").value;
+
+          try {
+            const response = await fetch(
+              "http://localhost:5000/api/admin/login",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, sifre }),
+              }
+            );
+
+            const data = await response.json();
+            if (data.success) {
+              // Giriş başarılıysa sessionStorage'a bilgi ekle
+              sessionStorage.setItem("adminLoggedIn", "true");
+              // Admin home sayfasına yönlendirme yap
+              window.location.href = "adminhome.html";
+            } else {
+              alert(
+                data.message ||
+                  "Giriş başarısız. Lütfen bilgilerinizi kontrol edin."
+              );
+            }
+          } catch (error) {
+            console.error("Giriş işlemi sırasında hata oluştu:", error);
+            alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+          }
+        });
+    </script>
+  </body>
+</html>
